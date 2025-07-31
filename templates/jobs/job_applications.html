@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Applications for {{ job.title }} - Job Portal{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2>
+                        <i class="fas fa-users me-2"></i>Applications for {{ job.title }}
+                    </h2>
+                    <p class="text-muted">{{ applications.count }} application{{ applications.count|pluralize }} received</p>
+                </div>
+                <a href="{% url 'my_jobs' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to My Jobs
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% if applications %}
+        <div class="row">
+            {% for application in applications %}
+                <div class="col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">
+                                <i class="fas fa-user me-2"></i>{{ application.applicant.username }}
+                            </h6>
+                            <span class="badge bg-info">{{ application.applied_at|timesince }} ago</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <small class="text-muted">Applicant</small>
+                                    <p class="mb-0">{{ application.applicant.get_full_name|default:application.applicant.username }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <small class="text-muted">Email</small>
+                                    <p class="mb-0">{{ application.applicant.email }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <small class="text-muted">Cover Letter</small>
+                                <div class="border rounded p-3 bg-light">
+                                    {{ application.cover_letter|truncatewords:30 }}
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    {% if application.resume %}
+                                        <a href="{{ application.resume.url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                            <i class="fas fa-download me-1"></i>Download Resume
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-sm btn-success">
+                                        <i class="fas fa-check"></i> Accept
+                                    </button>
+                                    <button class="btn btn-sm btn-danger">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+            <h4 class="text-muted">No applications yet</h4>
+            <p class="text-muted">Applications will appear here when candidates apply to this position.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block title %}Applicant Dashboard - Job Portal{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Welcome Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-gradient text-white">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="mb-2">
+                                <i class="fas fa-user me-2"></i>Welcome back, {{ user.username }}!
+                            </h2>
+                            <p class="lead mb-0">Track your applications and discover new opportunities</p>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <a href="{% url 'job_list' %}" class="btn btn-light btn-lg">
+                                <i class="fas fa-search me-2"></i>Browse Jobs
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="card stats-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-paper-plane fa-2x mb-3"></i>
+                    <h3 class="mb-1">{{ my_applications.count }}</h3>
+                    <p class="mb-0">Applications Sent</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="card stats-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock fa-2x mb-3"></i>
+                    <h3 class="mb-1">{{ my_applications.count }}</h3>
+                    <p class="mb-0">Pending Reviews</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="card stats-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-eye fa-2x mb-3"></i>
+                    <h3 class="mb-1">{{ my_applications.count }}</h3>
+                    <p class="mb-0">Profile Views</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mb-3">
+            <div class="card stats-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-star fa-2x mb-3"></i>
+                    <h3 class="mb-1">4.8</h3>
+                    <p class="mb-0">Success Rate</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Applications -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-paper-plane me-2"></i>Your Recent Applications
+                        </h5>
+                        <a href="{% url 'my_applications' %}" class="btn btn-gradient btn-sm">
+                            <i class="fas fa-eye me-2"></i>View All Applications
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if my_applications %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Job Title</th>
+                                        <th>Company</th>
+                                        <th>Location</th>
+                                        <th>Applied</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for application in my_applications|slice:":5" %}
+                                        <tr>
+                                            <td>
+                                                <strong>{{ application.job.title }}</strong>
+                                            </td>
+                                            <td>{{ application.job.company_name }}</td>
+                                            <td>
+                                                <i class="fas fa-map-marker-alt me-1 text-primary"></i>
+                                                {{ application.job.location }}
+                                            </td>
+                                            <td>{{ application.applied_at|timesince }} ago</td>
+                                            <td>
+                                                <span class="badge bg-warning">Pending</span>
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'job_detail' application.job.id %}" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-paper-plane fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No applications yet</h5>
+                            <p class="text-muted">Start applying to jobs to track your applications here.</p>
+                            <a href="{% url 'job_list' %}" class="btn btn-gradient">
+                                <i class="fas fa-search me-2"></i>Browse Jobs
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mt-4">
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="fas fa-search fa-3x text-primary mb-3"></i>
+                    <h5>Find Jobs</h5>
+                    <p class="text-muted">Browse available positions and find your perfect match</p>
+                    <a href="{% url 'job_list' %}" class="btn btn-gradient">
+                        <i class="fas fa-search me-2"></i>Browse Jobs
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="fas fa-paper-plane fa-3x text-success mb-3"></i>
+                    <h5>My Applications</h5>
+                    <p class="text-muted">Track all your submitted applications and their status</p>
+                    <a href="{% url 'my_applications' %}" class="btn btn-gradient">
+                        <i class="fas fa-eye me-2"></i>View Applications
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
